@@ -11,8 +11,8 @@ hikari_bot = hikari.GatewayBot("TOKEN")
 
 @dpy_bot.event
 async def on_connect():
-	# This is required to use REST routes :(
-	hikari_bot._rest.start()
+    # This is required to use REST routes :(
+    hikari_bot._rest.start()
 
 
 @dpy_bot.event
