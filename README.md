@@ -41,3 +41,7 @@ requires you to use a hikari client with no intents and start both clients.
 ### contact me
 
 You can find me in the [Hikari Discord server](https://discord.gg/Jx4cNGG).
+
+Download from PyPI!
+
+`pip install hikari_shim`
