@@ -1,0 +1,25 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "hikari_shim"
+authors = [{name = "A5rocks", email = "git@helvetica.moe"}]
+classifiers = ["License :: OSI Approved :: MIT License"]
+dynamic = ["version", "description"]
+dependencies = [
+	"hikari==2.0.0.dev101"
+]
+readme="README.md"
+requires-python=">=3.8"
+
+[project.optional-dependencies]
+dev = [
+	"discord.py",
+	"mypy",
+	"isort",
+	"black"
+]
+
+[project.urls]
+Home = "https://github.com/A5rocks/hikari-dpy-shim"
