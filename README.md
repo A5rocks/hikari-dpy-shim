@@ -10,6 +10,12 @@ hikari_bot = hikari.GatewayBot("TOKEN")
 
 
 @dpy_bot.event
+async def on_connect():
+	# This is required to use REST routes :(
+	hikari_bot._rest.start()
+
+
+@dpy_bot.event
 async def on_message(message):
     print("message received on discord.py side!")
 
@@ -36,6 +42,7 @@ requires you to use a hikari client with no intents and start both clients.
  - Ratelimiting is not shared.
  - You will have double the CPU usage and double the memory usage. (or
    something in that range).
+ - Some components may not have been started yet.
  - More, probably.
 
 ### contact me
