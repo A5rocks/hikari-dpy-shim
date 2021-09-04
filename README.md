@@ -1,4 +1,4 @@
-Usage as a partial shim:
+Usage:
 
 ```py
 import discord
@@ -10,19 +10,15 @@ hikari_bot = hikari.GatewayBot("TOKEN")
 
 
 @dpy_bot.event
-async def on_connect():
-    # This is required to use REST routes :(
-    hikari_bot._rest.start()
-
-
-@dpy_bot.event
 async def on_message(message):
-    print("message received on discord.py side!")
+    if message.content == "discord.py is cool":
+        await message.channel.send("yes it is!")
 
 
 @hikari_bot.listen(hikari.MessageCreateEvent)
 async def hikari_on_message(evt):
-    print("message received on hikari side!")
+    if evt.content == "hikari is cool":
+        await evt.message.respond("yes it is!")
 
 
 hikari_shim.partial_load(dpy_bot, hikari_bot)
@@ -31,7 +27,7 @@ dpy_bot.run("TOKEN")
 ```
 
 There's also a full (?) shim, but it runs into loop issues and whatnot. It
-requires you to use a hikari client with no intents and start both clients.
+requires you to use a Hikari client with no intents and start both clients.
 
 ### caveat emptor
 
@@ -42,8 +38,19 @@ requires you to use a hikari client with no intents and start both clients.
  - Ratelimiting is not shared.
  - You will have double the CPU usage and double the memory usage. (or
    something in that range).
- - Some components may not have been started yet.
+ - Some components may not have been started yet. (if you're using a non-
+   standard client).
+ - You will get all the incompatibilities Discord.py gives. This means, for
+   example, you cannot get thread events on dpy 1.7 even if Hikari has those.
  - More, probably.
+
+### why though?
+
+Incrementally rewrite your bot in a whole library. This means that you can
+have a total rewrite without people ever noticing (though they will,
+probably). Also, this lets you stick with discord.py while the Hikari
+community matures for some parts (though caveats still apply, so you'll want
+to have the entire bot in Hikari eventually).
 
 ### contact me
 
