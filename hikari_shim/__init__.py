@@ -12,7 +12,7 @@ import discord
 import hikari
 import hikari.api.shard as shard_api
 
-__version__ = "1.0.1.dev"
+__version__ = "1.0.3.dev"
 
 ZLIB_SUFFIX = b"\x00\x00\xff\xff"
 
