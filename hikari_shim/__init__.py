@@ -6,6 +6,7 @@ import datetime
 import json
 import typing
 import zlib
+import asyncio
 
 import discord
 import hikari
@@ -119,9 +120,33 @@ class DummyShard(shard_api.GatewayShard):
         raise NotImplementedError("Not sure how to do this with Discord.py")
 
 
-def partial_load(dpy: discord.Client, hk: hikari.EventManagerAware) -> None:
+def partial_load(dpy: discord.Client, hk: hikari.GatewayBotAware) -> None:
     buffer = bytearray()
     inflator = zlib.decompressobj()
+
+    @dpy.event
+    async def on_connect() -> None:
+        # stripped down logic from GatewayBot#start
+        if isinstance(hk.rest, hikari.impl.RESTClientImpl):
+            hk.rest.start()
+        
+        # technically should be dispatched earlier but whatever
+        await hk.event_manager.dispatch(hk.event_factory.deserialize_starting_event())
+
+        try:
+            hk._is_alive = True
+        except AttributeError:
+            pass
+    
+        if isinstance(hk.voice, hikari.impl.VoiceComponentImpl):
+            hk.voice.start()
+        
+        try:
+            hk._closing_event = asyncio.Event()
+        except AttributeError:
+            pass
+            
+        await hk.event_manager.dispatch(hk.event_factory.deserialize_started_event())
 
     @dpy.event
     async def on_socket_raw_receive(msg: typing.Union[str, bytes]) -> None:
@@ -149,11 +174,8 @@ def partial_load(dpy: discord.Client, hk: hikari.EventManagerAware) -> None:
         hk.event_manager.consume_raw_event(evt["t"], dummy, evt["d"])
 
 
-class _FullLoadProto(hikari.EventManagerAware, hikari.ShardAware):
-    pass
 
-
-def full_load(dpy: discord.Client, hk: _FullLoadProto) -> None:
+def full_load(dpy: discord.Client, hk: hikari.GatewayBotAware) -> None:
     buffer = bytearray()
     inflator = zlib.decompressobj()
 
