@@ -8,7 +8,7 @@ authors = [{name = "A5rocks", email = "git@helvetica.moe"}]
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
 dependencies = [
-	"hikari==2.0.0.dev101"
+	"hikari"
 ]
 readme="README.md"
 requires-python=">=3.8"
